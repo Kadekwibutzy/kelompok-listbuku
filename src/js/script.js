@@ -1,30 +1,56 @@
-document.addEventListener("DOMContentLoaded", () => {
+// ambil data
+import { generateElement, getAllBooks } from "./api.js";
 
-    const formInput = document.getElementById("inputBook");
-    const formSearch = document.getElementById("searchBook");
+const semuaData = document.getElementById("semuaData");
 
-    formInput.addEventListener("submit", (e) => {
-        e.preventDefault();
-        addBook();
-
-        document.getElementById("inputBookTitle").value = "";
-        document.getElementById("inputBookAuthor").value = "";
-        document.getElementById("inputBookYear").value = "";
-        document.getElementById("inputBookIsComplete").checked = false;
+async function getSemuaData() {
+  const dataDariApi = await getAllBooks();
+  console.log(dataDariApi);
+  // looping
+  dataDariApi.forEach((item) => {
+    console.log(item);
+    // memunculkan ke index.html  -> ctrl + space
+    const new_item = generateElement({
+      tag: "div",
+      value: item.summary,
+      className: "card p-2",
     });
 
-    formSearch.addEventListener("submit", (e) => {
-        e.preventDefault();
+    // menggabungkan
+    semuaData.append(...[new_item]);
+  });
+}
 
-        const inputSearch = document.getElementById("searchBookTitle").value;
-        bookSearch(inputSearch);
-    })
+// panggil fungsi
+getSemuaData();
 
-    if (isStorageAvailable()) {
-        loadDataFromStorage();
-    }
+// -------------------------------------
+document.addEventListener("DOMContentLoaded", () => {
+  const formInput = document.getElementById("inputBook");
+  const formSearch = document.getElementById("searchBook");
+
+  formInput.addEventListener("submit", (e) => {
+    e.preventDefault();
+    addBook();
+
+    document.getElementById("inputBookTitle").value = "";
+    document.getElementById("inputBookAuthor").value = "";
+    document.getElementById("inputBookYear").value = "";
+    document.getElementById("inputBookIsComplete").checked = false;
+  });
+
+  formSearch.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const inputSearch = document.getElementById("searchBookTitle").value;
+    bookSearch(inputSearch);
+  });
+
+  if (isStorageAvailable()) {
+    loadDataFromStorage();
+  }
 });
 
 document.addEventListener("ondataloaded", () => {
-    renderFromBooks();
+  renderFromBooks();
 });
