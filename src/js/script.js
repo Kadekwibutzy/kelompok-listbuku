@@ -1,30 +1,62 @@
-document.addEventListener("DOMContentLoaded", () => {
+// ambil data
+import { generateElement, getAllBooks } from "./api.js";
 
-    const formInput = document.getElementById("inputBook");
-    const formSearch = document.getElementById("searchBook");
+const semuaData = document.getElementById("Judul");
+const deskripsiData = document.getElementById("Deskripsi");
 
-    formInput.addEventListener("submit", (e) => {
-        e.preventDefault();
-        addBook();
-
-        document.getElementById("inputBookTitle").value = "";
-        document.getElementById("inputBookAuthor").value = "";
-        document.getElementById("inputBookYear").value = "";
-        document.getElementById("inputBookIsComplete").checked = false;
+async function getSemuaData() {
+  const dataDariApi = await getAllBooks();
+  console.log("Data dari API:", dataDariApi);
+  // looping
+  dataDariApi.forEach((item) => {
+    // memunculkan ke index.html
+    const newJudul = generateElement({
+      tag: "div",
+      value: item.title,
     });
 
-    formSearch.addEventListener("submit", (e) => {
-        e.preventDefault();
+    const newDeskripsi = generateElement({
+      tag: "div",
+      value: item.summary,
+      className: "card p-2",
+    });
 
-        const inputSearch = document.getElementById("searchBookTitle").value;
-        bookSearch(inputSearch);
-    })
+    // menggabungkan
+    semuaData.append(...[newJudul]);
+    deskripsiData.append(...[newDeskripsi]);
+  });
+}
 
-    if (isStorageAvailable()) {
-        loadDataFromStorage();
-    }
+// Panggil fungsi untuk menampilkan data
+getSemuaData();
+
+// -------------------------------------
+document.addEventListener("DOMContentLoaded", () => {
+  const formInput = document.getElementById("inputBook");
+  const formSearch = document.getElementById("searchBook");
+
+  formInput.addEventListener("submit", (e) => {
+    e.preventDefault();
+    addBook();
+
+    document.getElementById("inputBookTitle").value = "";
+    document.getElementById("inputBookAuthor").value = "";
+    document.getElementById("inputBookYear").value = "";
+    document.getElementById("inputBookIsComplete").checked = false;
+  });
+
+  formSearch.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const inputSearch = document.getElementById("searchBookTitle").value;
+    bookSearch(inputSearch);
+  });
+
+  if (isStorageAvailable()) {
+    loadDataFromStorage();
+  }
 });
 
 document.addEventListener("ondataloaded", () => {
-    renderFromBooks();
+  renderFromBooks();
 });
