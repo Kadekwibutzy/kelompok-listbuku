@@ -1,8 +1,9 @@
-// ambil data
-import { generateElement, getAllBooks } from "./api.js";
 
-const semuaData = document.getElementById("Judul");
-const deskripsiData = document.getElementById("Deskripsi");
+// ambil data
+import { generateElement, getAllBooks, getBooks, createBook, updateBook, deletebook } from "./api.js";
+
+const semuaData = document.getElementById("book-content");
+const deskripsiData = document.getElementById("book-content");
 
 async function getSemuaData() {
   const dataDariApi = await getAllBooks();

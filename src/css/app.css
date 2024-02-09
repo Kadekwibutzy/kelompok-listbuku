@@ -84,6 +84,16 @@ body {
     background-color:#07ffac ;
 }
 
+.dashboard-container .book-container .book-box .quiz-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid #a1a1a1;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
 .btn-search:focus {
     box-shadow: none;
 }
