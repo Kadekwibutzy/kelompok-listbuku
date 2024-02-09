@@ -2,8 +2,8 @@
 // ambil data
 import { generateElement, getAllBooks, getBooks, createBook, updateBook, deletebook } from "./api.js";
 
-const semuaData = document.getElementById("book-content");
-const deskripsiData = document.getElementById("book-content");
+const semuaData = document.getElementById("judulbuku");
+const deskripsiData = document.getElementById("deskripsibuku");
 
 async function getSemuaData() {
   const dataDariApi = await getAllBooks();
@@ -19,7 +19,6 @@ async function getSemuaData() {
     const newDeskripsi = generateElement({
       tag: "div",
       value: item.summary,
-      className: "card p-2",
     });
 
     // menggabungkan
