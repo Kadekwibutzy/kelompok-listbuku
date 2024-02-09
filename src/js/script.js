@@ -1,27 +1,33 @@
-// ambil data
 import { generateElement, getAllBooks } from "./api.js";
 
-const semuaData = document.getElementById("semuaData");
+const semuaData = document.getElementById("Judul");
+const deskripsiData = document.getElementById("Deskripsi");
 
 async function getSemuaData() {
   const dataDariApi = await getAllBooks();
-  console.log(dataDariApi);
+  console.log("Data dari API:", dataDariApi);
+
   // looping
   dataDariApi.forEach((item) => {
-    console.log(item);
-    // memunculkan ke index.html  -> ctrl + space
-    const new_item = generateElement({
+    // memunculkan ke index.html
+    const newJudul = generateElement({
+      tag: "div",
+      value: item.title,
+    });
+
+    const newDeskripsi = generateElement({
       tag: "div",
       value: item.summary,
       className: "card p-2",
     });
 
     // menggabungkan
-    semuaData.append(...[new_item]);
+    semuaData.append(...[newJudul]);
+    deskripsiData.append(...[newDeskripsi]);
   });
 }
 
-// panggil fungsi
+// Panggil fungsi untuk menampilkan data
 getSemuaData();
 
 // -------------------------------------
