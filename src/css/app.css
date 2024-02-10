@@ -190,7 +190,6 @@ label {
   font-weight: 800;
   color: #111;
   width: 240px;
-  text-decoration: underline;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
