@@ -1,3 +1,36 @@
+
+// ambil data
+import { generateElement, getAllBooks, getBooks, createBook, updateBook, deletebook } from "./api.js";
+
+const semuaData = document.getElementById("judulbuku");
+const deskripsiData = document.getElementById("deskripsibuku");
+
+async function getSemuaData() {
+  const dataDariApi = await getAllBooks();
+  console.log("Data dari API:", dataDariApi);
+  // looping
+  dataDariApi.forEach((item) => {
+    // memunculkan ke index.html
+    const newJudul = generateElement({
+      tag: "div",
+      value: item.title,
+    });
+
+    const newDeskripsi = generateElement({
+      tag: "div",
+      value: item.summary,
+    });
+
+    // menggabungkan
+    semuaData.append(...[newJudul]);
+    deskripsiData.append(...[newDeskripsi]);
+  });
+}
+
+// Panggil fungsi untuk menampilkan data
+getSemuaData();
+
+// -------------------------------------
 import { generateElement, getAllBooks } from "./api.js";
 
 const semuaData = document.getElementById("Judul");

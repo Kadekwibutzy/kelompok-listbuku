@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> juli-dev
 const BASE_URL = "http://128.199.167.159/v1/idc";
 
 /** ** 13 Januari 2024 **
@@ -44,7 +49,11 @@ export async function getAllBooks() {
   }
 }
 
+<<<<<<< HEAD
 export async function getQuestions() {
+=======
+export async function getBooks() {
+>>>>>>> juli-dev
   try {
     const response = await fetch(`${BASE_URL}/api/quizzes`, {
       method: "GET",
@@ -62,7 +71,7 @@ export async function getQuestions() {
   }
 }
 
-export async function createQuestion({ payload = undefined }) {
+export async function createBook({ payload = undefined }) {
   try {
     const response = await fetch(`${BASE_URL}/api/quiz`, {
       method: "POST",
@@ -81,7 +90,7 @@ export async function createQuestion({ payload = undefined }) {
   }
 }
 
-export async function updateQuestionById({ id = 1, payload = undefined }) {
+export async function updateBook({ id = 1, payload = undefined }) {
   try {
     const response = await fetch(`${BASE_URL}/api/quiz/${id}/update`, {
       method: "PUT",
@@ -100,7 +109,7 @@ export async function updateQuestionById({ id = 1, payload = undefined }) {
   }
 }
 
-export async function deleteQuestionById({ id = 1 }) {
+export async function deletebook({ id = 1 }) {
   try {
     const response = await fetch(`${BASE_URL}/api/quiz/${id}/delete`, {
       method: "DELETE",
