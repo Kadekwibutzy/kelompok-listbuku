@@ -4,6 +4,8 @@ import { generateElement, getAllBooks, getBooks, createBook, updateBook, deleteb
 
 const semuaData = document.getElementById("judulbuku");
 const deskripsiData = document.getElementById("deskripsibuku");
+const authorData = document.getElementById("author");
+const TahunPenerbitData = document.getElementById("tahunpenerbit");
 
 async function getSemuaData() {
   const dataDariApi = await getAllBooks();
@@ -21,9 +23,21 @@ async function getSemuaData() {
       value: item.summary,
     });
 
+    const newAuthor = generateElement({
+      tag: "div",
+      value: item.author,
+    })
+
+    const newTahunPenerbit = generateElement({
+      tag: "div",
+      value: item.published_at,
+    })
+
     // menggabungkan
     semuaData.append(...[newJudul]);
     deskripsiData.append(...[newDeskripsi]);
+    authorData.append(...[newAuthor]);
+    TahunPenerbitData.append(...[newTahunPenerbit]);
   });
 }
 
