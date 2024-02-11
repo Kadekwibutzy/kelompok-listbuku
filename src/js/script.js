@@ -7,11 +7,11 @@ const formSearch = document.getElementById("searchBook");
 
 const bookContainer = document.getElementById("book-container");
 
-// const authorData = document.getElementById("author");
-// const TahunPenerbitData = document.getElementById("tahunpenerbit");
+const authorData = document.getElementById("author");
+const TahunPenerbitData = document.getElementById("tahunpenerbit");
+const semuaData = document.getElementById("Judul");
+const deskripsiData = document.getElementById("deskripsi");
 
-// const semuaData = document.getElementById("Judul");
-// const deskripsiData = document.getElementById("Deskripsi");
 
 // -------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
@@ -53,14 +53,20 @@ document.addEventListener("DOMContentLoaded", () => {
           value: book.published_at,
         });
 
+        const description = generateElement({
+          tag: "div",
+          id: "tahunpenerbit",
+          value: book.summary,
+        });
+
         // Memasukan element titleBook, author, releaseYear ke dalam section left
-        sectionLeft.append(...[titleBook, author, releaseYear]);
+        sectionLeft.append(...[titleBook, author, releaseYear, description]);
 
         // COntoh bikin gambar
-        // const imageBook = generateElement({
-        //   tag: "img",
-        //   src: book.image_url,
-        // })
+        const imageData = generateElement({
+          tag: "img",
+          src: book.uploaded_at,
+        })
 
         // Deskripsi buku
         const descriptionBook = generateElement({
@@ -94,6 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("inputBookYear").value = "";
     document.getElementById("inputBookIsComplete").checked = false;
   });
+
 
   // FITUR SEARCH
   formSearch.addEventListener("submit", (e) => {
