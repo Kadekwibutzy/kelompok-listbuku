@@ -29,11 +29,11 @@ export async function getAllBooks() {
 
 export async function createBook({ payload = undefined }) {
   try {
-    const response = await fetch(`${BASE_URL}/api/books`, {
+    const response = await fetch(`${BASE_URL}/book`, {
       method: "POST",
       body: JSON.stringify(payload),
       headers: {
-        "Content-Type": "books/json",
+        "Content-Type": "application/json",
       },
     });
 

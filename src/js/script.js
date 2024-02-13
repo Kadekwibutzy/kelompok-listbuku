@@ -8,15 +8,18 @@ const formSearch = document.getElementById("searchBook");
 
 const bookContainer = document.getElementById("book-container");
 
-const authorData = document.getElementById("author");
-const TahunPenerbitData = document.getElementById("tahunpenerbit");
-const semuaData = document.getElementById("Judul");
-const deskripsiData = document.getElementById("deskripsi");
+// const authorData = document.getElementById("author");
+// const TahunPenerbitData = document.getElementById("tahunpenerbit");
+// const semuaData = document.getElementById("Judul");
+// const deskripsiData = document.getElementById("deskripsi");
 
-const form = document.getElementById('addBookForm');
+// const form = document.getElementById("addBookForm");
 
-
-
+const inputBookTitle = document.getElementById("inputBookTitle");
+const inputBookAuthor = document.getElementById("inputBookAuthor");
+const inputBookYear = document.getElementById("inputBookYear");
+const inputBookSummary = document.getElementById("inputBookSummary");
+const inputBookIsComplete = document.getElementById("inputBookIsComplete");
 
 // -------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
@@ -58,22 +61,20 @@ document.addEventListener("DOMContentLoaded", () => {
           value: book.published_at,
         });
 
-
         const description = generateElement({
           tag: "div",
           id: "tahunpenerbit",
           value: book.summary,
         });
 
-
         // Memasukan element titleBook, author, releaseYear ke dalam section left
-        sectionLeft.append(...[titleBook, author, releaseYear, description,]);
+        sectionLeft.append(...[titleBook, author, releaseYear, description]);
 
         // COntoh bikin gambar
-        const imageData = generateElement({
-          tag: "img",
-          src: book.uploaded_at,
-        })
+        // const imageData = generateElement({
+        //   tag: "img",
+        //   src: book.uploaded_at,
+        // });
 
         // Deskripsi buku
         const descriptionBook = generateElement({
@@ -97,7 +98,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   handleGetAllBooks();
 
-
   async function handleAddBook(payload) {
     try {
       /**
@@ -117,7 +117,8 @@ document.addEventListener("DOMContentLoaded", () => {
         inputBookTitle.value = "";
         inputBookAuthor.value = "";
         inputBookYear.value = "";
-        inputsummary.value = "";
+        inputBookSummary.value = "";
+        inputBookIsComplete.value = false;
 
         window.location.reload();
       }
@@ -131,16 +132,20 @@ document.addEventListener("DOMContentLoaded", () => {
   // SUBMIT DATA
   formInput.addEventListener("submit", (e) => {
     e.preventDefault();
-    createBook();
 
-    document.getElementById("inputBookTitle").value = "";
-    document.getElementById("inputBookAuthor").value = "";
-    document.getElementById("inputBookYear").value = "";
-    document.getElementById("inputBookIsComplete").checked = false;
+    const payload = {
+      title: inputBookTitle.value,
+      author: inputBookAuthor.value,
+      summary: inputBookSummary.value,
+      published_at: new Date(),
+      is_read: inputBookIsComplete.value,
+      url: "...",
+    };
+
+    handleAddBook(payload);
+
+    // alert("sukses");
   });
-
-  
-
 
   // FITUR SEARCH
   formSearch.addEventListener("submit", (e) => {
@@ -151,12 +156,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-
 const buttonDelete = generateElement({
   tag: "button",
   id: "button-delete",
   className: "btn btn-delete",
-  elementHTML: Icon.delete,
+  // elementHTML: Icon.delete,
 });
 
 // Ketika tombol delete di klik maka akan menjalankan fungsi handleDeleteQuestion
@@ -168,4 +172,9 @@ buttonDelete.addEventListener("click", async (e) => {
 
 // document.addEventListener("ondataloaded", () => {
 //   renderFromBooks();
+// });
+
+// const buttonTambah = document.querySelector("#buttonTambah");
+// buttonTambah.addEventListener("click", () => {
+//   alert("hai");
 // });
