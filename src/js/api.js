@@ -29,11 +29,11 @@ export async function getAllBooks() {
 
 export async function createBook({ payload = undefined }) {
   try {
-    const response = await fetch(`${BASE_URL}/api/quiz`, {
+    const response = await fetch(`${BASE_URL}/api/books`, {
       method: "POST",
       body: JSON.stringify(payload),
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "books/json",
       },
     });
 
@@ -65,7 +65,7 @@ export async function updateBook({ id = 1, payload = undefined }) {
   }
 }
 
-export async function deletebook({ id = 1 }) {
+export async function deleteBook({ id = 1 }) {
   try {
     const response = await fetch(`${BASE_URL}/book/${id}/delete`, {
       method: "DELETE",

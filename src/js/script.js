@@ -1,6 +1,7 @@
 // ambil data
+
 import { generateElement } from "./utils.js";
-import { getAllBooks } from "./api.js";
+import { createBook, getAllBooks } from "./api.js";
 
 const formInput = document.getElementById("inputBook");
 const formSearch = document.getElementById("searchBook");
@@ -11,6 +12,10 @@ const authorData = document.getElementById("author");
 const TahunPenerbitData = document.getElementById("tahunpenerbit");
 const semuaData = document.getElementById("Judul");
 const deskripsiData = document.getElementById("deskripsi");
+
+const form = document.getElementById('addBookForm');
+
+
 
 
 // -------------------------------------
@@ -53,14 +58,16 @@ document.addEventListener("DOMContentLoaded", () => {
           value: book.published_at,
         });
 
+
         const description = generateElement({
           tag: "div",
           id: "tahunpenerbit",
           value: book.summary,
         });
 
+
         // Memasukan element titleBook, author, releaseYear ke dalam section left
-        sectionLeft.append(...[titleBook, author, releaseYear, description]);
+        sectionLeft.append(...[titleBook, author, releaseYear, description,]);
 
         // COntoh bikin gambar
         const imageData = generateElement({
@@ -90,16 +97,49 @@ document.addEventListener("DOMContentLoaded", () => {
 
   handleGetAllBooks();
 
+
+  async function handleAddBook(payload) {
+    try {
+      /**
+       * Kita akan panggil fungsi createQuestion yang sudah kita buat di file `api.js`
+       * Lalu kita akan kirim payload ke dalam fungsi tersebut
+       */
+      const result = await createBook({ payload: payload });
+
+      /**
+       * Kita lakukan pengecekan jika ketika respon kode yang diberikan itu 201 (Created)
+       * Maka munculkan alert "Berhasil menambahkan data", kosongkan inputan dan reload halaman
+       */
+
+      if (result?.code === 201) {
+        alert("Berhasil menambahkan data");
+
+        inputBookTitle.value = "";
+        inputBookAuthor.value = "";
+        inputBookYear.value = "";
+        inputsummary.value = "";
+
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error ngirim Nih: ", {
+        error,
+      });
+    }
+  }
+
   // SUBMIT DATA
   formInput.addEventListener("submit", (e) => {
     e.preventDefault();
-    addBook();
+    createBook();
 
     document.getElementById("inputBookTitle").value = "";
     document.getElementById("inputBookAuthor").value = "";
     document.getElementById("inputBookYear").value = "";
     document.getElementById("inputBookIsComplete").checked = false;
   });
+
+  
 
 
   // FITUR SEARCH
@@ -109,6 +149,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputSearch = document.getElementById("searchBookTitle").value;
     bookSearch(inputSearch);
   });
+});
+
+
+const buttonDelete = generateElement({
+  tag: "button",
+  id: "button-delete",
+  className: "btn btn-delete",
+  elementHTML: Icon.delete,
+});
+
+// Ketika tombol delete di klik maka akan menjalankan fungsi handleDeleteQuestion
+buttonDelete.addEventListener("click", async (e) => {
+  e.preventDefault();
+
+  handleDelteBook(question.id);
 });
 
 // document.addEventListener("ondataloaded", () => {
