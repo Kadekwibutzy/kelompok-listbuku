@@ -1,7 +1,7 @@
 // ambil data
 
 import { generateElement, Icon } from "./utils.js";
-import { createBook, getAllBooks, updateBook, DeleteBook } from "./api.js";
+import { createBook, getAllBooks, updateBook, deleteBookById } from "./api.js";
 
 const formInput = document.getElementById("inputBook");
 const formSearch = document.getElementById("searchBook");
@@ -19,14 +19,16 @@ const inputBookTitle = document.getElementById("inputBookTitle");
 const inputBookAuthor = document.getElementById("inputBookAuthor");
 const inputBookYear = document.getElementById("inputBookYear");
 const inputBookSummary = document.getElementById("inputBookSummary");
+const inputLinkBook = document.getElementById("inputLinkBook")
 const inputBookIsComplete = document.getElementById("inputBookIsComplete");
 
 // -------------------------------------
 
-async function handledeleteBook(id) {
+async function handleDeleteBook(id) {
   try {
-    const result = await deleteQuestionById({ id });
-    console.log('Data dari API:', questions);
+    // Perbaiki referensi variabel menjadi result
+    const result = await deleteBookById({ id });
+    console.log('Data dari API:', result);
 
     if (!result) return;
 
@@ -41,6 +43,7 @@ async function handledeleteBook(id) {
     });
   }
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
   async function handleGetAllBooks() {
@@ -87,8 +90,14 @@ document.addEventListener("DOMContentLoaded", () => {
           value: book.summary,
         });
 
+        const linkbook = generateElement({
+          tag: "p",
+          id: "alamatbuku",
+          value: book.url,
+        });
+
         // Memasukan element titleBook, author, releaseYear ke dalam section left
-        sectionLeft.append(...[titleBook, author, releaseYear, description]);
+        sectionLeft.append(...[titleBook, author, releaseYear, description, linkbook]);
 
         // COntoh bikin gambar
         // const imageData = generateElement({
@@ -113,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
         buttonDelete.addEventListener("click", async (e) => {
           e.preventDefault();
   
-          handleDeleteBook(question.id);
+          handleDeleteBook(book.id);
         });
   
         // Sekarang kita masukan element button edit dan delete ke dalam section kanan
@@ -155,6 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
         inputBookAuthor.value = "";
         inputBookYear.value = "";
         inputBookSummary.value = "";
+        inputLinkBook.value = "";
         inputBookIsComplete.value = false;
         
         window.location.reload();
@@ -177,8 +187,8 @@ document.addEventListener("DOMContentLoaded", () => {
       author: inputBookAuthor.value,
       summary: inputBookSummary.value,
       published_at: new Date(),
+      url: inputLinkBook.value,
       is_read: inputBookIsComplete.value,
-      url: "...",
     };
 
     handleAddBook(payload);
