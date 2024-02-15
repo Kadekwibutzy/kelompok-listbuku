@@ -1,7 +1,7 @@
 // ambil data
 
-import { generateElement } from "./utils.js";
-import { createBook, getAllBooks } from "./api.js";
+import { generateElement, Icon } from "./utils.js";
+import { createBook, getAllBooks, updateBook, DeleteBook } from "./api.js";
 
 const formInput = document.getElementById("inputBook");
 const formSearch = document.getElementById("searchBook");
@@ -22,6 +22,26 @@ const inputBookSummary = document.getElementById("inputBookSummary");
 const inputBookIsComplete = document.getElementById("inputBookIsComplete");
 
 // -------------------------------------
+
+async function handledeleteBook(id) {
+  try {
+    const result = await deleteQuestionById({ id });
+    console.log('Data dari API:', questions);
+
+    if (!result) return;
+
+    if (result?.code === 200) {
+      alert("Berhasil menghapus data");
+
+      window.location.reload();
+    }
+  } catch (error) {
+    console.error("Error ngirim Nih: ", {
+      error,
+    });
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   async function handleGetAllBooks() {
     try {
@@ -82,6 +102,23 @@ document.addEventListener("DOMContentLoaded", () => {
           id: "deskripsibuku",
         });
 
+        const buttonDelete = generateElement({
+          tag: "button",
+          id: "button-delete",
+          className: "btn btn-delete",
+          elementHTML: Icon.delete,
+        });
+  
+        // Ketika tombol delete di klik maka akan menjalankan fungsi handleDeleteQuestion
+        buttonDelete.addEventListener("click", async (e) => {
+          e.preventDefault();
+  
+          handleDeleteBook(question.id);
+        });
+  
+        // Sekarang kita masukan element button edit dan delete ke dalam section kanan
+        sectionLeft.append(...[buttonDelete]);
+
         // Memasukan element sectionLeft, descriptionBook ke dalam quizItem
         quizItem.append(...[sectionLeft, descriptionBook]);
 
@@ -119,7 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
         inputBookYear.value = "";
         inputBookSummary.value = "";
         inputBookIsComplete.value = false;
-
+        
         window.location.reload();
       }
     } catch (error) {
@@ -128,6 +165,8 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   }
+
+  
 
   // SUBMIT DATA
   formInput.addEventListener("submit", (e) => {
@@ -153,6 +192,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const inputSearch = document.getElementById("searchBookTitle").value;
     bookSearch(inputSearch);
+
+    
   });
 });
 

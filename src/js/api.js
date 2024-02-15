@@ -65,9 +65,9 @@ export async function updateBook({ id = 1, payload = undefined }) {
   }
 }
 
-export async function deleteBook({ id = 1 }) {
+export async function DeleteBook({ id = 1 }) {
   try {
-    const response = await fetch(`${BASE_URL}/book/${id}/delete`, {
+    const response = await fetch(`${BASE_URL}/api/book/${id}/delete`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
