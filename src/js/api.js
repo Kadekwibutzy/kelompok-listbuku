@@ -27,6 +27,24 @@ export async function getAllBooks() {
   }
 }
 
+export async function getBooks() {
+  try {
+    const response = await fetch(`${BASE_URL}/books/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const result = await response.json();
+    return result?.data;
+  } catch (error) {
+    console.error("Error Nih: ", {
+      error,
+    });
+  }
+}
+
 export async function createBook({ payload = undefined }) {
   try {
     const response = await fetch(`${BASE_URL}/book`, {
@@ -47,6 +65,25 @@ export async function createBook({ payload = undefined }) {
 }
 
 export async function updateBook({ id = 1, payload = undefined }) {
+  try {
+    const response = await fetch(`${BASE_URL}/book/${id}/edit`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error Nih: ", {
+      error,
+    });
+  }
+}
+
+export async function updateBookById({ id = 1, payload = undefined }) {
   try {
     const response = await fetch(`${BASE_URL}/book/${id}/edit`, {
       method: "PUT",

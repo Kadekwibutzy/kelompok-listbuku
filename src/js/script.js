@@ -1,12 +1,13 @@
 // ambil data
 
 import { generateElement, Icon } from "./utils.js";
-import { createBook, getAllBooks, updateBook, deleteBookById } from "./api.js";
+import { createBook, getBooks, getAllBooks, updateBookById, deleteBookById } from "./api.js";
 
 const formInput = document.getElementById("inputBook");
 const formSearch = document.getElementById("searchBook");
 
 const bookContainer = document.getElementById("book-container");
+const submitButton = document.getElementById("buttontambah");
 
 // const authorData = document.getElementById("author");
 // const TahunPenerbitData = document.getElementById("tahunpenerbit");
@@ -34,6 +35,24 @@ async function handleDeleteBook(id) {
 
     if (result?.code === 200) {
       alert("Berhasil menghapus data");
+
+      window.location.reload();
+    }
+  } catch (error) {
+    console.error("Error ngirim Nih: ", {
+      error,
+    });
+  }
+}
+
+async function handleUpdateBookById(id, payload) {
+  try {
+    const result = await updateBookById({ id, payload });
+
+    if (!result) return;
+
+    if (result?.code === 200) {
+      alert("Berhasil mengupdate data");
 
       window.location.reload();
     }
@@ -111,6 +130,20 @@ document.addEventListener("DOMContentLoaded", () => {
           id: "deskripsibuku",
         });
 
+        const buttonEdit = generateElement({
+          tag: "button",
+          id: "button-edit",
+          className: "btn btn-edit",
+          elementHTML: Icon.update,
+        });
+  
+        buttonEdit.addEventListener("click", async (e) => {
+          e.preventDefault();
+  
+          handlegetBooks(book.id);
+        });
+  
+
         const buttonDelete = generateElement({
           tag: "button",
           id: "button-delete",
@@ -126,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
   
         // Sekarang kita masukan element button edit dan delete ke dalam section kanan
-        sectionLeft.append(...[buttonDelete]);
+        sectionLeft.append(...[buttonDelete, buttonEdit]);
 
         // Memasukan element sectionLeft, descriptionBook ke dalam quizItem
         quizItem.append(...[sectionLeft, descriptionBook]);
@@ -218,7 +251,32 @@ const buttonDelete = generateElement({
 buttonDelete.addEventListener("click", async (e) => {
   e.preventDefault();
 
-  handleDelteBook(question.id);
+  handleDelteBook(book.id);
+
+  submitButton.addEventListener("click", async (e) => {
+    /**
+     * e.preventDefault() adalah untuk mencegah
+     * form mengirim data ke halaman lain
+     */
+    e.preventDefault();
+
+    /**
+     * Kita akan mengambil data dari inputan
+     * Lalu value inputan tersebut akan kita masukkan ke dalam objek payload
+     */
+    const payload = {
+      title: inputBookTitle?.value || "",
+      author: inputBookAuthor?.value || "",
+      summary: inputBookSummary?.value || "",
+      url: inputLinkBook?.value || "",
+    };
+
+    if (inputId.value === "") {
+      handleGetAllBooks(payload);
+    } else {
+      handleUpdateBookById(inputId.value, payload);
+    }
+  });
 });
 
 // document.addEventListener("ondataloaded", () => {
