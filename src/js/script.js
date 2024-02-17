@@ -140,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
         buttonEdit.addEventListener("click", async (e) => {
           e.preventDefault();
   
-          handlegetBooks(book.id);
+          handleGetAllBooks(book.id);
         });
   
 
@@ -272,7 +272,7 @@ buttonDelete.addEventListener("click", async (e) => {
     };
 
     if (inputId.value === "") {
-      handleGetAllBooks(payload);
+      handleGetBooks(payload);
     } else {
       handleUpdateBookById(inputId.value, payload);
     }
