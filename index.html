@@ -156,7 +156,7 @@
             </div>
             <div class="mb-2">
               <label class="form-label" for="inputBookYear">Tahun Diterbitkan</label>
-              <input class="form-control rounded-xl p-3" id="inputBookYear" type="number" required />
+              <input class="form-control rounded-xl p-3" id="inputBookYear" type="datetime-local" required />
             </div>
             <div class="mb-2">
               <label class="form-label" for="inputBookSummary">Ringkasan Buku</label>
@@ -166,8 +166,12 @@
               <label class="form-label" for="inputLinkBook">Sumber Buku</label>
               <input class="form-control rounded-xl p-3" id="inputLinkBook" type="text" required />
             </div>
+
+            <!-- MENAMBAHKAN INPUTAN UNTUK MENAMPUNG ID DARI BUKU KETIKA INGIN UPDATE -->
+            <input class="form-control rounded-xl p-3" id="inputId" type="text" style="display: none;" readonly />
+
             <div class="mb-2 form-check">
-              <input class="form-check-input" id="inputBookIsComplete" type="checkbox" />
+              <input class="form-check-input" id="inputBookIsCompleted" type="checkbox"  />
               <label class="form-check-label" for="inputBookIsComplete">Sudah Dibaca</label>
             </div>
             <div class="mt-3 d-grid">

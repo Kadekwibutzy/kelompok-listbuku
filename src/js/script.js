@@ -1,7 +1,13 @@
 // ambil data
 
 import { generateElement, Icon } from "./utils.js";
-import { createBook, getBooks, getAllBooks, updateBookById, deleteBookById } from "./api.js";
+import {
+  createBook,
+  getAllBooks,
+  updateBookById,
+  deleteBookById,
+  getBook,
+} from "./api.js";
 
 const formInput = document.getElementById("inputBook");
 const formSearch = document.getElementById("searchBook");
@@ -20,58 +26,25 @@ const inputBookTitle = document.getElementById("inputBookTitle");
 const inputBookAuthor = document.getElementById("inputBookAuthor");
 const inputBookYear = document.getElementById("inputBookYear");
 const inputBookSummary = document.getElementById("inputBookSummary");
-const inputLinkBook = document.getElementById("inputLinkBook")
-const inputBookIsComplete = document.getElementById("inputBookIsComplete");
+const inputLinkBook = document.getElementById("inputLinkBook");
+const inputBookIsComplete = document.getElementById("inputBookIsCompleted");
+
+// console.log({ 2: inputBookIsComplete.value });
+
+// MEMANGGIL INPUT ID DARI HTML AGAR BISA DI MANIPULASI DI JAVASCRIPT\
+const inputId = document.getElementById("inputId");
 
 // -------------------------------------
 
-async function handleDeleteBook(id) {
-  try {
-    // Perbaiki referensi variabel menjadi result
-    const result = await deleteBookById({ id });
-    console.log('Data dari API:', result);
-
-    if (!result) return;
-
-    if (result?.code === 200) {
-      alert("Berhasil menghapus data");
-
-      window.location.reload();
-    }
-  } catch (error) {
-    console.error("Error ngirim Nih: ", {
-      error,
-    });
-  }
-}
-
-async function handleUpdateBookById(id, payload) {
-  try {
-    const result = await updateBookById({ id, payload });
-
-    if (!result) return;
-
-    if (result?.code === 200) {
-      alert("Berhasil mengupdate data");
-
-      window.location.reload();
-    }
-  } catch (error) {
-    console.error("Error ngirim Nih: ", {
-      error,
-    });
-  }
-}
-
-
 document.addEventListener("DOMContentLoaded", () => {
+  // MENGAMBIL SEMUA BUKU
   async function handleGetAllBooks() {
     try {
       const result = await getAllBooks();
 
       if (result?.length < 1) return alert("Data Kosong");
 
-      result.forEach((book) => {
+      result?.forEach((book) => {
         // Buat pembungkus data buku
         const quizItem = generateElement({
           tag: "div",
@@ -116,7 +89,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         // Memasukan element titleBook, author, releaseYear ke dalam section left
-        sectionLeft.append(...[titleBook, author, releaseYear, description, linkbook]);
+        sectionLeft.append(
+          ...[titleBook, author, releaseYear, description, linkbook]
+        );
 
         // COntoh bikin gambar
         // const imageData = generateElement({
@@ -136,13 +111,12 @@ document.addEventListener("DOMContentLoaded", () => {
           className: "btn btn-edit",
           elementHTML: Icon.update,
         });
-  
+
         buttonEdit.addEventListener("click", async (e) => {
           e.preventDefault();
-  
-          handleGetAllBooks(book.id);
+
+          handleGetBookById(book.id);
         });
-  
 
         const buttonDelete = generateElement({
           tag: "button",
@@ -150,14 +124,14 @@ document.addEventListener("DOMContentLoaded", () => {
           className: "btn btn-delete",
           elementHTML: Icon.delete,
         });
-  
+
         // Ketika tombol delete di klik maka akan menjalankan fungsi handleDeleteQuestion
         buttonDelete.addEventListener("click", async (e) => {
           e.preventDefault();
-  
+
           handleDeleteBook(book.id);
         });
-  
+
         // Sekarang kita masukan element button edit dan delete ke dalam section kanan
         sectionLeft.append(...[buttonDelete, buttonEdit]);
 
@@ -177,6 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   handleGetAllBooks();
 
+  // MENAMBAHKAN BUKU
   async function handleAddBook(payload) {
     try {
       /**
@@ -199,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
         inputBookSummary.value = "";
         inputLinkBook.value = "";
         inputBookIsComplete.value = false;
-        
+
         window.location.reload();
       }
     } catch (error) {
@@ -209,49 +184,87 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  
+  // MENGHAPUS BUKU
+  async function handleDeleteBook(id) {
+    try {
+      // Perbaiki referensi variabel menjadi result
+      const result = await deleteBookById({ id });
+      console.log("Data dari API:", result);
 
-  // SUBMIT DATA
-  formInput.addEventListener("submit", (e) => {
-    e.preventDefault();
+      if (!result) return;
 
-    const payload = {
-      title: inputBookTitle.value,
-      author: inputBookAuthor.value,
-      summary: inputBookSummary.value,
-      published_at: new Date(),
-      url: inputLinkBook.value,
-      is_read: inputBookIsComplete.value,
-    };
+      if (result?.code === 200) {
+        alert("Berhasil menghapus data");
 
-    handleAddBook(payload);
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error ngirim Nih: ", {
+        error,
+      });
+    }
+  }
 
-    // alert("sukses");
-  });
+  // MENGAMBIL BUKU BERDASARKAN ID
+  async function handleGetBookById(id) {
+    try {
+      const result = await getBook(id);
 
-  // FITUR SEARCH
-  formSearch.addEventListener("submit", (e) => {
-    e.preventDefault();
+      if (!result) return;
 
-    const inputSearch = document.getElementById("searchBookTitle").value;
-    bookSearch(inputSearch);
+      console.log({ result });
 
-    
-  });
-});
+      inputBookTitle.value = result?.title;
+      inputBookAuthor.value = result?.author;
+      inputBookYear.value = result?.published_at;
+      inputBookSummary.value = result?.summary;
+      inputLinkBook.value = result?.url;
+      inputBookIsComplete.checked = result?.isRead;
+    } catch (error) {
+      console.error("Error ngirim Nih: ", {
+        error,
+      });
+    }
+  }
 
-const buttonDelete = generateElement({
-  tag: "button",
-  id: "button-delete",
-  className: "btn btn-delete",
-  // elementHTML: Icon.delete,
-});
+  // MENGUBAH BUKU BERDASARKAN ID
+  async function handleUpdateBookById(id, payload) {
+    try {
+      const result = await updateBookById({ id, payload });
 
-// Ketika tombol delete di klik maka akan menjalankan fungsi handleDeleteQuestion
-buttonDelete.addEventListener("click", async (e) => {
-  e.preventDefault();
+      if (!result) return;
 
-  handleDelteBook(book.id);
+      if (result?.code === 200) {
+        alert("Berhasil mengupdate data");
+
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error ngirim Nih: ", {
+        error,
+      });
+    }
+  }
+
+  // // SUBMIT DATA
+  // formInput.addEventListener("submit", (e) => {
+  //   e.preventDefault();
+
+  //   const payload = {
+  //     title: inputBookTitle.value,
+  //     author: inputBookAuthor.value,
+  //     summary: inputBookSummary.value,
+  //     published_at: inputBookYear.value,
+  //     url: inputLinkBook.value,
+  //     // MENGGUNAKAN CHECKED JIKA INPUTANNYA ITU CHECKBOX
+  //     is_read: inputBookIsComplete.checked,
+  //   };
+
+  //   // console.log({ payload });
+  //   handleAddBook(payload);
+
+  //   // alert("sukses");
+  // });
 
   submitButton.addEventListener("click", async (e) => {
     /**
@@ -265,25 +278,43 @@ buttonDelete.addEventListener("click", async (e) => {
      * Lalu value inputan tersebut akan kita masukkan ke dalam objek payload
      */
     const payload = {
-      title: inputBookTitle?.value || "",
-      author: inputBookAuthor?.value || "",
-      summary: inputBookSummary?.value || "",
-      url: inputLinkBook?.value || "",
+      title: inputBookTitle.value,
+      author: inputBookAuthor.value,
+      summary: inputBookSummary.value,
+      published_at: inputBookYear.value,
+      url: inputLinkBook.value,
+      // MENGGUNAKAN CHECKED JIKA INPUTANNYA ITU CHECKBOX
+      is_read: inputBookIsComplete.checked,
     };
 
+    // console.log({ payload });
+
     if (inputId.value === "") {
-      handleGetBooks(payload);
+      handleAddBook(payload);
     } else {
       handleUpdateBookById(inputId.value, payload);
     }
   });
+
+  // FITUR SEARCH
+  formSearch.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const inputSearch = document.getElementById("searchBookTitle").value;
+    bookSearch(inputSearch);
+  });
 });
 
-// document.addEventListener("ondataloaded", () => {
-//   renderFromBooks();
+// const buttonDelete = generateElement({
+//   tag: "button",
+//   id: "button-delete",
+//   className: "btn btn-delete",
+//   // elementHTML: Icon.delete,
 // });
 
-// const buttonTambah = document.querySelector("#buttonTambah");
-// buttonTambah.addEventListener("click", () => {
-//   alert("hai");
+// // Ketika tombol delete di klik maka akan menjalankan fungsi handleDeleteQuestion
+// buttonDelete.addEventListener("click", async (e) => {
+//   e.preventDefault();
+
+//   handleDelteBook(book.id);
 // });
