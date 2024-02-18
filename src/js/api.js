@@ -27,9 +27,9 @@ export async function getAllBooks() {
   }
 }
 
-export async function getBooks() {
+export async function getBook(id) {
   try {
-    const response = await fetch(`${BASE_URL}/books/${id}`, {
+    const response = await fetch(`${BASE_URL}/book/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
